@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ゲーム機器診断</title>
+<style>
+  :root{
+    --bg:#F3F4F6;
+    --card:#FFFFFF;
+    --ink:#222222;
+    --ink-muted:#666666;
+    --line:#E5E7EB;
+    --line-soft:#EFEFF1;
+    --accent:#2563EB;
+    --accent-soft:#EAF1FE;
+    --sans: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  *:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* ---- Site header / footer (shared with about/privacy/contact) ---- */
+  header{
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+    padding:16px 24px;
+  }
+  .header-inner{
+    max-width:760px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+  }
+  .header-inner .logo{ color:var(--ink); text-decoration:none; font-weight:bold; }
+  .header-inner nav{ display:flex; gap:18px; font-size:13px; }
+  .header-inner nav a{ color:var(--ink-muted); text-decoration:none; }
+  .header-inner nav a:hover{ color:var(--accent); }
+
+  .tool-main{
+    display:flex; justify-content:center;
+    padding:40px 16px;
+  }
+
+  footer{
+    text-align:center; color:var(--ink-muted); font-size:.85em;
+    padding:24px; border-top:1px solid var(--line);
+  }
+
+  .app-card{
+    width:100%; max-width:460px;
+    background:var(--card);
+    border:1px solid var(--line-soft);
+    border-radius:16px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04), 0 8px 24px rgba(16,24,40,.05);
+    padding:36px 28px;
+  }
+
+  h1{
+    font-size:21px;
+    font-weight:700;
+    line-height:1.5;
+    margin:0 0 8px;
+    letter-spacing:-.01em;
+  }
+  .lede{ color:var(--ink-muted); font-size:14px; line-height:1.7; margin:0 0 28px; }
+
+  /* ---- Selector ---- */
+  .selector{ display:flex; flex-direction:column; gap:12px; }
+  .device-card{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 18px; text-align:left; cursor:pointer;
+    color:var(--ink); font-family:var(--sans); width:100%;
+    transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .device-card:hover{
+    border-color:var(--accent);
+    box-shadow:0 4px 14px rgba(47,94,224,.10);
+    background:var(--accent-soft);
+  }
+  .device-card .icon{
+    width:38px; height:38px; flex:none; border-radius:9px;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px;
+  }
+  .device-card .text{ flex:1; }
+  .device-card .name{ font-size:15.5px; font-weight:700; margin-bottom:2px; }
+  .device-card .desc{ font-size:12.5px; color:var(--ink-muted); }
+  .device-card .arrow{ font-size:18px; color:var(--ink-muted); flex:none; }
+
+  /* ---- Progress ---- */
+  .progress-row{ display:flex; align-items:center; gap:12px; margin-bottom:28px; }
+  .progress-track{ flex:1; height:6px; border-radius:999px; background:var(--line); position:relative; overflow:hidden; }
+  .progress-fill{ position:absolute; left:0; top:0; height:100%; border-radius:999px; background:var(--accent); transition:width .3s ease; }
+  .progress-label{ font-size:12.5px; color:var(--ink-muted); font-weight:600; white-space:nowrap; }
+
+  /* ---- Quiz ---- */
+  #screen-quiz{ display:none; }
+  .q-text{ font-size:19px; font-weight:700; line-height:1.6; margin:0 0 20px; }
+  .options{ display:flex; flex-direction:column; gap:10px; }
+  .opt-btn{
+    display:flex; align-items:center; gap:12px;
+    text-align:left;
+    background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    padding:14px 16px;
+    cursor:pointer;
+    width:100%;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt-btn:hover{ border-color:var(--accent); background:var(--accent-soft); }
+  .opt-btn .letter{
+    width:24px; height:24px; flex:none; border-radius:7px;
+    background:var(--line-soft); color:var(--ink-muted);
+    font-size:12px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .opt-btn:hover .letter{ background:var(--accent); color:#fff; }
+
+  .back-link{
+    display:inline-block;
+    background:none; border:none; color:var(--ink-muted);
+    font-size:13px;
+    cursor:pointer; padding:0; margin-top:22px;
+  }
+  .back-link:hover{ color:var(--ink); }
+
+  /* ---- Result ---- */
+  #screen-result{ display:none; }
+  .result-badge{
+    display:inline-block; font-size:12px; font-weight:700; color:var(--accent);
+    background:var(--accent-soft); padding:5px 10px; border-radius:999px; margin-bottom:14px;
+  }
+  .result-title{ font-size:23px; font-weight:700; margin:0 0 12px; line-height:1.45; }
+  .result-blurb{ color:var(--ink-muted); font-size:14.5px; line-height:1.8; margin:0 0 22px; }
+
+  .answers-box{
+    background:#F9FAFB; border:1px solid var(--line-soft); border-radius:12px;
+    padding:4px 16px; margin:0 0 20px;
+  }
+  .answers-box li{
+    display:flex; justify-content:space-between; align-items:center;
+    list-style:none; border-top:1px solid var(--line-soft);
+    padding:11px 0; font-size:13.5px;
+  }
+  .answers-box li:first-child{ border-top:none; }
+  .answers-box .k{ color:var(--ink-muted); }
+  .answers-box .v{ font-weight:600; }
+
+  .note{ font-size:12.5px; color:var(--ink-muted); line-height:1.7; margin:0 0 24px; }
+
+  .actions{ display:flex; flex-direction:column; gap:10px; }
+  .btn{
+    font-family:var(--sans); font-size:14.5px; font-weight:700;
+    padding:14px 16px; border-radius:10px; cursor:pointer; border:1px solid transparent;
+    width:100%;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ background:#2650C6; }
+  .btn-ghost{ background:#fff; color:var(--ink-muted); border-color:var(--line); }
+  .btn-ghost:hover{ color:var(--ink); border-color:var(--ink-muted); }
+
+  .copied-msg{
+    font-size:12px; color:var(--accent); font-weight:600;
+    margin-top:12px; height:14px; opacity:0; transition:opacity .2s ease; text-align:center;
+  }
+  .copied-msg.show{ opacity:1; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">デバイス診断</a>
+    <nav>
+      <a href="index.html">トップ</a>
+      <a href="about.html">運営者情報</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
+
+<main class="tool-main">
+<div class="app-card">
+
+  <!-- SELECT SCREEN -->
+  <section id="screen-select">
+    <h1>あなたに合うゲーム機器を見つける</h1>
+    <p class="lede">5つの質問に答えると、マウス／キーボードのおすすめタイプが分かります。</p>
+    <div class="selector">
+      <button class="device-card" data-device="mouse">
+        <span class="icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="5"/><line x1="12" y1="3" x2="12" y2="9"/></svg></span>
+        <span class="text">
+          <span class="name">マウス診断</span>
+          <span class="desc">持ち方・サイズから選ぶ</span>
+        </span>
+        <span class="arrow">→</span>
+      </button>
+      <button class="device-card" data-device="keyboard">
+        <span class="icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="10.01"/><line x1="9.5" y1="10" x2="9.5" y2="10.01"/><line x1="13" y1="10" x2="13" y2="10.01"/><line x1="16.5" y1="10" x2="16.5" y2="10.01"/><line x1="7" y1="14" x2="17" y2="14"/></svg></span>
+        <span class="text">
+          <span class="name">キーボード診断</span>
+          <span class="desc">打鍵感・サイズから選ぶ</span>
+        </span>
+        <span class="arrow">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- QUIZ SCREEN -->
+  <section id="screen-quiz">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">1 / 5</div>
+    </div>
+    <p class="q-text" id="q-text"></p>
+    <div class="options" id="q-options"></div>
+    <button class="back-link" id="btn-back">← 前の質問へ</button>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section id="screen-result">
+    <span class="result-badge" id="result-badge"></span>
+    <h1 class="result-title" id="result-title"></h1>
+    <p class="result-blurb" id="result-blurb"></p>
+    <ul class="answers-box" id="result-answers"></ul>
+    <p class="note">具体的な製品名・購入リンクは今後ここに追加予定です（プロトタイプ）。</p>
+    <div class="actions">
+      <button class="btn btn-primary" id="btn-copy">診断結果をコピーする</button>
+      <button class="btn btn-ghost" id="btn-restart">もう一度診断する</button>
+    </div>
+    <div class="copied-msg" id="copied-msg">コピーしました</div>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  &copy; 2026 デバイス診断
+</footer>
+
+<script>
+(function(){
+
+  const QUESTIONS = {
+    mouse: [
+      { key:'grip',   text:'持ち方は？', options:['かぶせ持ち','つかみ持ち','つまみ持ち'] },
+      { key:'size',   text:'手のひらのサイズは？', options:['小(17cm未満)','中(17〜19cm)','大(19cm以上)'] },
+      { key:'wired',  text:'有線・無線どちらが良い？', options:['有線','無線'] },
+      { key:'genre',  text:'主なプレイジャンルは？', options:['FPS','MOBA・RTS','作業用'] },
+      { key:'budget', text:'予算感は？', options:['〜3,000円','〜6,000円','10,000円〜'] },
+    ],
+    keyboard: [
+      { key:'feel',    text:'求める打鍵感は？', options:['静音','軽快カチカチ','重め安定'] },
+      { key:'size',    text:'サイズは？', options:['フルサイズ','テンキーレス','60%以下コンパクト'] },
+      { key:'wired',   text:'有線・無線どちらが良い？', options:['有線','無線'] },
+      { key:'hotswap', text:'ホットスワップ（軸交換）に興味は？', options:['興味あり','なくてもよい'] },
+      { key:'usage',   text:'主な用途は？', options:['ゲーム重視','タイピング・作業重視','両方'] },
+    ]
+  };
+
+  const PATTERNS = {
+    mouse: [
+      {id:'M-01', grip:['つまみ持ち'], size:['小(17cm未満)','中(17〜19cm)'], genre:['FPS'], wired:['無線'], budget:['10,000円〜'],
+        category:'軽量ワイヤレスFPS向け', blurb:'30〜60g台の超軽量、高精度センサー、コードレスで振り回しやすい。'},
+      {id:'M-02', grip:['つまみ持ち'], size:['小(17cm未満)','中(17〜19cm)'], genre:['FPS'], wired:['有線'], budget:['〜3,000円'],
+        category:'軽量エントリーFPS向け', blurb:'低遅延・低価格で軽量、初めての軽量マウスにおすすめ。'},
+      {id:'M-03', grip:['つかみ持ち'], size:['中(17〜19cm)'], genre:['FPS'], wired:['無線'], budget:['〜6,000円'],
+        category:'バランス型ワイヤレスFPS向け', blurb:'重すぎず持ちやすいサイズ感、汎用性の高いFPS入門機。'},
+      {id:'M-04', grip:['かぶせ持ち'], size:['中(17〜19cm)','大(19cm以上)'], genre:['MOBA・RTS'], wired:['有線'], budget:['〜6,000円'],
+        category:'多ボタン・マルチファンクション型', blurb:'サイドボタンが多く、スキル割り当てやマクロ操作に強い。'},
+      {id:'M-05', grip:['かぶせ持ち'], size:['大(19cm以上)'], genre:['作業用'], wired:['無線'], budget:['〜6,000円'],
+        category:'エルゴノミクス・作業向け', blurb:'手首や指への負担が少ない形状、長時間のPC作業向け。'},
+      {id:'M-06', grip:['かぶせ持ち'], size:['大(19cm以上)'], genre:['作業用'], wired:['有線'], budget:['〜3,000円'],
+        category:'コスパ重視エントリーマウス', blurb:'価格重視の初心者・サブ機向け、必要十分な機能。'},
+      {id:'M-07', grip:['つかみ持ち'], size:['中(17〜19cm)','大(19cm以上)'], genre:['MOBA・RTS'], wired:['無線'], budget:['10,000円〜'],
+        category:'ハイエンド多機能ワイヤレス', blurb:'高精度センサー＋多ボタンを両立、上級者向け。'},
+      {id:'M-08', grip:['つまみ持ち'], size:['小(17cm未満)'], genre:['FPS'], wired:['有線'], budget:['10,000円〜'],
+        category:'競技志向・有線軽量FPS向け', blurb:'有線接続にこだわる競技勢向け、遅延を極限まで抑えたい層。'},
+      {id:'M-09', grip:['かぶせ持ち'], size:['中(17〜19cm)'], genre:['作業用'], wired:['有線','無線'], budget:['〜6,000円'],
+        category:'静音・オフィス向け', blurb:'クリック音が静かで、在宅ワークや共有スペースでの利用に適する。'},
+      {id:'M-10', grip:['つかみ持ち'], size:['大(19cm以上)'], genre:['作業用'], wired:['無線'], budget:['〜3,000円'],
+        category:'バーティカル・エルゴノミクス型', blurb:'手首を立てて使うタイプ、腱鞘炎対策として需要がある層向け。'},
+    ],
+    keyboard: [
+      {id:'K-01', feel:['静音'], size:['テンキーレス'], wired:['有線'], hotswap:['なくてもよい'], usage:['タイピング・作業重視'],
+        category:'静音赤軸・静音打鍵向け', blurb:'在宅ワークや夜間作業でも周囲を気にせず使える。'},
+      {id:'K-02', feel:['軽快カチカチ'], size:['60%以下コンパクト'], wired:['無線'], hotswap:['興味あり'], usage:['ゲーム重視'],
+        category:'青軸・クリッキー系コンパクト', blurb:'小気味よい打鍵音とフィードバック、省スペースでマウス操作域も確保。'},
+      {id:'K-03', feel:['重め安定'], size:['フルサイズ'], wired:['有線'], hotswap:['なくてもよい'], usage:['タイピング・作業重視'],
+        category:'重めタクタイル・茶軸系フルサイズ', blurb:'指が沈み込む安定した打鍵感、長文入力向け。'},
+      {id:'K-04', feel:['軽快カチカチ'], size:['テンキーレス'], wired:['有線'], hotswap:['興味あり'], usage:['両方'],
+        category:'ホットスワップ対応TKL', blurb:'軸を自分で交換して好みに調整できる、ゲームと作業を両立。'},
+      {id:'K-05', feel:['静音'], size:['フルサイズ'], wired:['無線'], hotswap:['なくてもよい'], usage:['タイピング・作業重視'],
+        category:'静音・ワイヤレスオフィス向け', blurb:'会議中でも使える静かさとケーブルレスの快適さ。'},
+      {id:'K-06', feel:['重め安定'], size:['60%以下コンパクト'], wired:['無線'], hotswap:['興味あり'], usage:['ゲーム重視'],
+        category:'競技志向・軽量コンパクト無線', blurb:'省スペース＋低遅延、上級者の競技環境向け。'},
+      {id:'K-07', feel:['軽快カチカチ'], size:['フルサイズ'], wired:['有線'], hotswap:['なくてもよい'], usage:['両方'],
+        category:'コスパ重視エントリー機', blurb:'価格を抑えつつ標準的な打鍵感、初めてのメカニカルに。'},
+      {id:'K-08', feel:['重め安定'], size:['テンキーレス'], wired:['無線'], hotswap:['興味あり'], usage:['タイピング・作業重視'],
+        category:'高級打鍵感・カスタム志向TKL', blurb:'打鍵音・打鍵感にこだわるタイピングマニア向け。'},
+      {id:'K-09', feel:['静音'], size:['60%以下コンパクト'], wired:['有線'], hotswap:['なくてもよい'], usage:['両方'],
+        category:'静音コンパクト・省スペース型', blurb:'デスクを広く使いたい、かつ静かに使いたい層向け。'},
+      {id:'K-10', feel:['軽快カチカチ'], size:['フルサイズ'], wired:['無線'], hotswap:['興味あり'], usage:['ゲーム重視'],
+        category:'ホットスワップ対応フルサイズ', blurb:'多機能キーを活かしつつ、軸交換で打鍵感も追求できる。'},
+    ]
+  };
+
+  const WEIGHTS = {
+    mouse:    { grip:3, size:2, genre:3, wired:2, budget:1 },
+    keyboard: { feel:3, size:2, wired:2, hotswap:2, usage:3 }
+  };
+
+  const LETTERS = ['A','B','C','D'];
+
+  let device = null;
+  let stepIndex = 0;
+  let answers = {};
+
+  const $ = (id) => document.getElementById(id);
+  const screenSelect = $('screen-select');
+  const screenQuiz = $('screen-quiz');
+  const screenResult = $('screen-result');
+
+  function showScreen(el){
+    [screenSelect, screenQuiz, screenResult].forEach(s => s.style.display = 'none');
+    el.style.display = 'block';
+  }
+
+  document.querySelectorAll('.device-card').forEach(card => {
+    card.addEventListener('click', () => {
+      device = card.dataset.device;
+      stepIndex = 0;
+      answers = {};
+      showScreen(screenQuiz);
+      renderQuestion();
+    });
+  });
+
+  function renderQuestion(){
+    const qs = QUESTIONS[device];
+    const q = qs[stepIndex];
+    $('q-text').textContent = q.text;
+    $('progress-label').textContent = (stepIndex+1) + ' / ' + qs.length;
+    $('progress-fill').style.width = (100 * stepIndex / qs.length) + '%';
+
+    const optWrap = $('q-options');
+    optWrap.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.innerHTML = '<span class="letter">' + LETTERS[i] + '</span><span>' + opt + '</span>';
+      b.addEventListener('click', () => {
+        answers[q.key] = opt;
+        if (stepIndex < qs.length - 1){
+          stepIndex++;
+          renderQuestion();
+        } else {
+          renderResult();
+        }
+      });
+      optWrap.appendChild(b);
+    });
+
+    $('btn-back').style.visibility = stepIndex === 0 ? 'hidden' : 'visible';
+  }
+
+  $('btn-back').addEventListener('click', () => {
+    if (stepIndex > 0){
+      stepIndex--;
+      renderQuestion();
+    }
+  });
+
+  function scorePattern(pattern, ans, weights){
+    let score = 0;
+    for (const key in weights){
+      const userVal = ans[key];
+      const patVals = pattern[key];
+      if (userVal && patVals && patVals.includes(userVal)) score += weights[key];
+    }
+    return score;
+  }
+
+  function bestMatch(){
+    const list = PATTERNS[device];
+    const weights = WEIGHTS[device];
+    let best = list[0], bestScore = -1;
+    list.forEach(p => {
+      const s = scorePattern(p, answers, weights);
+      if (s > bestScore){ bestScore = s; best = p; }
+    });
+    return best;
+  }
+
+  function renderResult(){
+    $('progress-fill').style.width = '100%';
+    const match = bestMatch();
+
+    $('result-badge').textContent = (device === 'mouse' ? 'マウス診断結果' : 'キーボード診断結果') + '　' + match.id;
+    $('result-title').textContent = match.category;
+    $('result-blurb').textContent = match.blurb;
+
+    const qs = QUESTIONS[device];
+    const list = $('result-answers');
+    list.innerHTML = '';
+    qs.forEach(q => {
+      const li = document.createElement('li');
+      const k = document.createElement('span');
+      k.className = 'k';
+      k.textContent = q.text.replace('は？','').replace('？','');
+      const v = document.createElement('span');
+      v.className = 'v';
+      v.textContent = answers[q.key] || '-';
+      li.appendChild(k); li.appendChild(v);
+      list.appendChild(li);
+    });
+
+    showScreen(screenResult);
+  }
+
+  $('btn-restart').addEventListener('click', () => {
+    device = null; stepIndex = 0; answers = {};
+    showScreen(screenSelect);
+  });
+
+  $('btn-copy').addEventListener('click', () => {
+    const match = bestMatch();
+    const label = device === 'mouse' ? 'マウス診断' : 'キーボード診断';
+    const text = '【' + label + '結果】あなたは「' + match.category + '」タイプ！(' + match.id + ')';
+    navigator.clipboard.writeText(text).then(() => {
+      const msg = $('copied-msg');
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 1600);
+    }).catch(() => {
+      const msg = $('copied-msg');
+      msg.textContent = 'コピーできませんでした（' + text + '）';
+      msg.classList.add('show');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

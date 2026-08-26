@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ | デバイス診断</title>
+<style>
+  :root {
+    --main: #2563eb;
+    --text: #222;
+    --sub: #666;
+    --bg: #fff;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    margin: 0;
+  }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+  }
+  .header-inner {
+    max-width: 760px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .header-inner .logo { color: var(--text); text-decoration: none; font-weight: bold; }
+  .header-inner nav { display: flex; gap: 18px; font-size: 13px; }
+  .header-inner nav a { color: var(--sub); text-decoration: none; }
+  .header-inner nav a:hover { color: var(--main); }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  h1 {
+    font-size: 1.6em;
+    border-bottom: 3px solid var(--main);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+  }
+  p { margin: 0 0 14px; }
+  .btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 14px 28px;
+    background: var(--main);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  .btn:hover { background: #1d4ed8; }
+  .note {
+    background: #f5f8ff;
+    border: 1px solid #dbe6ff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--sub);
+    font-size: 0.92em;
+    margin-top: 32px;
+  }
+  footer {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.85em;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">デバイス診断</a>
+    <nav>
+      <a href="index.html">トップ</a>
+      <a href="about.html">運営者情報</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <h1>お問い合わせ</h1>
+
+  <p>当サイト「デバイス診断」に関するご質問・ご意見・掲載内容の修正依頼・提携に関するお問い合わせなどは、下記フォームよりお気軽にご連絡ください。</p>
+  <p>内容を確認の上、通常3〜7営業日以内にご返信いたします。内容によってはお時間をいただく場合や、返信いたしかねる場合がございますので、あらかじめご了承ください。</p>
+
+  <!-- TODO: 下記リンクをご自身のGoogleフォームのURLに差し替えてください -->
+  <a class="btn" href="https://forms.gle/XXXXXXXXXX" target="_blank" rel="noopener noreferrer">お問い合わせフォームを開く</a>
+
+  <p class="note">※ このボタンのリンク先は仮のURLです。Googleフォームを作成後、href の値をご自身のフォームURLに差し替えてください。ご入力いただいた個人情報の取り扱いについては<a href="privacy.html">プライバシーポリシー</a>をご確認ください。</p>
+
+</main>
+<footer>
+  &copy; 2026 デバイス診断
+</footer>
+</body>
+</html>
