@@ -9,9 +9,9 @@
     'use strict';
 
    // ▼▼▼ ここに楽天ウェブサービスで発行したアプリID・アクセスキー・アフィリエイトIDを入れてください ▼▼▼
-   var APP_ID = 'PASTE_YOUR_APPLICATION_ID_HERE';
-    var ACCESS_KEY = 'PASTE_YOUR_ACCESS_KEY_HERE';
-    var AFFILIATE_ID = 'PASTE_YOUR_AFFILIATE_ID_HERE';
+   var APP_ID = '45f9e500-ebce-4f93-a51e-19dd8372a52c';
+    var ACCESS_KEY = 'pk_UWXPUBibFaBHJMmvPtmIMTUIntba0hUxlT7lOIXv49t';
+    var AFFILIATE_ID = '56f2dc50.03df62a8.56f2dc51.4ffb6a08';
     // ▲▲▲ ここまで ▲▲▲
 
    // 表示したい商品ジャンル（検索キーワード）とキーワードごとの表示件数
