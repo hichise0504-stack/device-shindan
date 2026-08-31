@@ -79,7 +79,10 @@
          if (!imageEntry) return '';
          var url = typeof imageEntry === 'string' ? imageEntry : imageEntry.imageUrl;
          if (!url) return '';
-         return url.replace(/^http:\/\//, 'https://');
+         url = url.replace(/^http:\/\//, 'https://');
+    // 楽天のサムネイルは既定で128x128と小さく、カードの表示サイズ（200px超）に
+    // 対して引き伸ばされて粗く見えるため、_ex パラメータでより大きいサイズを要求する
+    return url.replace(/([?&]_ex=)\d+x\d+/, function (m, prefix) { return prefix + '600x600'; });
    }
 
    function shuffle(list) {
