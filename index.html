@@ -308,6 +308,7 @@
     <div class="actions">
       <button class="btn btn-primary" id="btn-copy">診断結果をコピーする</button>
       <a class="btn btn-ghost" id="btn-share-x" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener">X（旧Twitter）でシェア</a>
+      <a class="btn btn-ghost" id="btn-share-line" href="https://line.me/R/msg/text/?" target="_blank" rel="noopener">LINEでシェア</a>
       <button class="btn btn-ghost" id="btn-restart">もう一度診断する</button>
     </div>
     <div class="copied-msg" id="copied-msg">コピーしました</div>
@@ -578,6 +579,7 @@
     const shareText = '【' + shareLabel + '結果】あなたは「' + match.category + '」タイプでした！';
     const shareUrl = 'https://device-shindan.com/';
     $('btn-share-x').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl) + '&hashtags=' + encodeURIComponent('デバイス診断');
+    $('btn-share-line').href = 'https://line.me/R/msg/text/?' + encodeURIComponent(shareText + '\n' + shareUrl);
 
     showScreen(screenResult);
   }
