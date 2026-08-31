@@ -163,24 +163,28 @@
          var container = document.getElementById('rakuten-recommend-items');
          if (!container || !APP_ID || APP_ID.indexOf('PASTE_') === 0) return;
 
-      var requests = KEYWORDS.map(function (keyword, index) {
-              var callbackName = '__rakutenRecommendCb' + index + '_' + Date.now();
-              return jsonp(buildUrl(keyword, callbackName), callbackName).catch(function () {
-                        return null; // 1件失敗しても他のキーワードの結果は使う
-              });
-      });
+              // 楽天APIの予想QPSは1リクエスト/秒のため、キーワードごとに閘をあけて順番にリクエストする
+        var allItems = [];
 
-      Promise.all(requests)
-           .then(function (responses) {
-                     var items = [];
-                     responses.forEach(function (res) {
-                                 items = items.concat(normalizeItems(res));
-                     });
-                     renderItems(shuffle(items));
-           })
-           .catch(function () {
-                     // 何も表示しない（サイトの見た目を壊さない）
-           });
+        function fetchNext(idx) {
+            if (idx >= KEYWORDS.length) {
+                renderItems(shuffle(allItems));
+                return;
+            }
+            var callbackName = '__rakutenRecommendCb' + idx + '_' + Date.now();
+            jsonp(buildUrl(KEYWORDS[idx], callbackName), callbackName)
+                .then(function (res) {
+                    allItems = allItems.concat(normalizeItems(res));
+                })
+                .catch(function () {
+                    // 1件失敗しても他のキーワードの結果は使う
+                })
+                .then(function () {
+                    setTimeout(function () { fetchNext(idx + 1); }, 1100);
+                });
+        }
+
+        fetchNext(0);
    }
 
    if (document.readyState === 'loading') {
