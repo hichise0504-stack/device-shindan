@@ -219,6 +219,7 @@
   .btn-primary:hover{ background:#2650C6; }
   .btn-ghost{ background:#fff; color:var(--ink-muted); border-color:var(--line); }
   .btn-ghost:hover{ color:var(--ink); border-color:var(--ink-muted); }
+  a.btn{ display:block; text-decoration:none; text-align:center; box-sizing:border-box; }
 
   .copied-msg{
     font-size:12px; color:var(--accent); font-weight:600;
@@ -306,6 +307,7 @@
     <div class="note" id="result-note"></div>
     <div class="actions">
       <button class="btn btn-primary" id="btn-copy">診断結果をコピーする</button>
+      <a class="btn btn-ghost" id="btn-share-x" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener">X（旧Twitter）でシェア</a>
       <button class="btn btn-ghost" id="btn-restart">もう一度診断する</button>
     </div>
     <div class="copied-msg" id="copied-msg">コピーしました</div>
@@ -571,6 +573,11 @@
     } else {
       noteEl.textContent = '具体的な製品名・購入リンクは今後ここに追加予定です（プロトタイプ）。';
     }
+    
+    const shareLabel = device === 'mouse' ? 'マウス診断' : 'キーボード診断';
+    const shareText = '【' + shareLabel + '結果】あなたは「' + match.category + '」タイプでした！';
+    const shareUrl = 'https://device-shindan.com/';
+    $('btn-share-x').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl) + '&hashtags=' + encodeURIComponent('デバイス診断');
 
     showScreen(screenResult);
   }
