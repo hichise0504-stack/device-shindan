@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2JBB49FJP0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2JBB49FJP0');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://device-shindan.com/column-keyboard-hotswap.html">
+<meta name="description" content="はんだ付けなしで軸（スイッチ）を交換できる「ホットスワップ対応」キーボードの仕組みとメリット、選び方を解説します。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ホットスワップ対応キーボードとは？メリットと選び方 | デバイス診断">
+<meta property="og:description" content="はんだ付けなしで軸（スイッチ）を交換できる「ホットスワップ対応」キーボードの仕組みとメリット、選び方を解説します。">
+<meta property="og:url" content="https://device-shindan.com/column-keyboard-hotswap.html">
+<meta property="og:site_name" content="デバイス診断">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:image" content="https://device-shindan.com/og-image.jpg">
+<meta property="og:image:width" content="1568">
+<meta property="og:image:height" content="737">
+<meta name="twitter:card" content="summary_large_image">
+<title>ホットスワップ対応キーボードとは？メリットと選び方 | デバイス診断</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://device-shindan.com/" },
+    { "@type": "ListItem", "position": 2, "name": "コラム", "item": "https://device-shindan.com/column.html" },
+    { "@type": "ListItem", "position": 3, "name": "ホットスワップ対応キーボードとは？メリットと選び方", "item": "https://device-shindan.com/column-keyboard-hotswap.html" }
+  ]
+}
+</script>
+<style>
+  :root {
+    --main: #2563eb;
+    --text: #222;
+    --sub: #666;
+    --bg: #fff;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    margin: 0;
+  }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+  }
+  .header-inner {
+    max-width: 760px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .header-inner .logo { text-decoration: none; font-weight: 800; font-size: 27px; letter-spacing: 0.5px; background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .header-inner nav { display: flex; gap: 18px; font-size: 13px; flex-wrap: wrap; }
+  .header-inner nav a { color: var(--sub); text-decoration: none; }
+  .header-inner nav a:hover { color: var(--main); }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  h1 {
+    font-size: 1.6em;
+    border-bottom: 3px solid var(--main);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 1.15em;
+    margin-top: 36px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--main);
+    padding-left: 10px;
+  }
+  p { margin: 0 0 14px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    width: 9em;
+    color: var(--sub);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .note {
+    background: #f5f8ff;
+    border: 1px solid #dbe6ff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--sub);
+    font-size: 0.92em;
+  }
+  footer {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.85em;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .col-meta { font-size:0.85em; color:var(--sub); margin-bottom:24px; }
+  .col-meta a { color:var(--main); }
+  .pattern-list { list-style:none; padding:0; margin:0 0 24px; }
+  .pattern-list li { border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:10px; }
+  .pattern-list .cat { font-weight:700; }
+  .pattern-list .blurb { color:var(--sub); font-size:0.92em; margin-top:4px; }
+  .cta { display:block; text-align:center; background:var(--main); color:#fff !important; text-decoration:none; font-weight:700; padding:16px; border-radius:10px; margin:32px 0; }
+  .cta:hover { background:#1d4ed8; }
+  .col-index-list { list-style:none; padding:0; margin:0; }
+  .col-index-list a { display:block; padding:18px; border:1px solid var(--border); border-radius:10px; text-decoration:none; color:var(--text); margin-bottom:14px; }
+  .col-index-list a:hover { border-color:var(--main); }
+  .col-index-list .t { font-weight:700; font-size:1.05em; margin-bottom:6px; }
+  .col-index-list .d { color:var(--sub); font-size:0.9em; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">デバイス診断</a>
+    <nav>
+      <a href="index.html">トップ</a>
+      <a href="column.html">コラム</a>
+      <a href="about.html">運営者情報</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <p class="col-meta"><a href="column.html">コラム</a> &gt; ホットスワップ対応キーボードとは？メリットと選び方</p>
+  <h1>ホットスワップ対応キーボードとは？メリットと選び方</h1>
+  <p>「ホットスワップ対応」のメカニカルキーボードは、はんだ付けをせずにキースイッチ（軸）を差し替えられる仕組みを備えたモデルです。打鍵感を後から調整したい人に人気の機能で、選び方のポイントを紹介します。</p>
+  <h2>ホットスワップの仕組み</h2>
+  <p>通常のメカニカルキーボードはスイッチが基板にはんだ付けされていますが、ホットスワップ対応モデルは専用のソケットにスイッチを差し込む構造になっており、工具を使わずに軸を引き抜いて交換できます。</p>
+  <h2>ホットスワップのメリット</h2>
+  <p>購入後に「静音軸に変えたい」「もっとクリック感が欲しい」といった好みの変化に合わせて、本体を買い替えずに打鍵感を調整できます。</p>
+  <p>一部のキーだけ違う軸に変えるなど、キーごとに使い分けるカスタマイズも可能です。ゲームとタイピングの両方を1台でこなしたい人にも向いています。</p>
+  <h2>選ぶ際の注意点</h2>
+  <p>対応するスイッチの軸形式（3ピン/5ピンなど）は製品によって異なるため、将来的に軸交換を考えている場合は対応形式を確認しておくと安心です。</p>
+  <p>ホットスワップ非対応のモデルに比べて価格がやや高めになる傾向がありますが、長く使い込みながら好みを調整したい人にとっては投資しやすい選択肢です。</p>
+  <h2>該当する主なタイプ</h2>
+  <ul class="pattern-list">
+    <li><span class="cat">ホットスワップ対応TKL</span><div class="blurb">軸を自分で交換して好みに調整できる、ゲームと作業を両立。</div></li>
+    <li><span class="cat">ホットスワップ対応フルサイズ</span><div class="blurb">多機能キーを活かしつつ、軸交換で打鍵感も追求できる。</div></li>
+    <li><span class="cat">高級打鍵感・カスタム志向TKL</span><div class="blurb">打鍵音・打鍵感にこだわるタイピングマニア向け。</div></li>
+  </ul>
+  <a class="cta" href="index.html">自分に合うキーボードをキーボード診断で見つける →</a>
+  <p class="note">掲載している商品分類・傾向は当サイトの診断ロジックに基づく一般的な目安です。実際の製品選びの際は、各商品ページの最新情報もあわせてご確認ください。</p>
+
+</main>
+<footer>
+  &copy; 2026 デバイス診断
+</footer>
+</body>
+</html>
