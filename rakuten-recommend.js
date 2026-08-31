@@ -1,8 +1,8 @@
 /**
  * おすすめ商品ウィジェット（楽天市場 商品検索APIを利用）
  * - #rakuten-recommend-items 要素を見つけて、そこに商品カードを描画する
- * - 楽天APIはブラウザから直接呼ぶとCORSで弾かれるため、公式にサポートされている
- *   JSONP（callbackパラメータ）方式でリクエストする
+  - 楽天APIは fetch() で直接JSON形式のレスポンスを取得する（script src読み込みだと
+ *   Rakuten側でリクエストが弾かれるため使用しない）
  * - APIエラーやタイムアウト時は何も表示しない（サイトの見た目を壊さない）
  */
 (function () {
@@ -20,12 +20,10 @@
 
    // 新API（2026年仕様）のエンドポイント。旧 app.rakuten.co.jp/services/api は
    // 2026年5月13日で廃止されたため openapi.rakuten.co.jp を使用する。
-   // このAPIはリクエストにRefererが必須のため、script src読み込み（＝実際のページ経由）
-   // でのみ動作し、アドレスバー直打ちでは403になる。
    var API_ENDPOINT = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701';
     var REQUEST_TIMEOUT_MS = 8000;
 
-   function buildUrl(keyword, callbackName) {
+   function buildUrl(keyword) {
          var params = {
                  applicationId: APP_ID,
                  accessKey: ACCESS_KEY,
@@ -34,8 +32,7 @@
                  hits: HITS_PER_KEYWORD,
                  imageFlag: 1,
                  formatVersion: 2,
-                 format: 'json',
-                 callback: callbackName
+                 format: 'json'
          };
          var qs = Object.keys(params)
            .filter(function (k) { return params[k] !== '' && params[k] != null; })
@@ -44,41 +41,24 @@
          return API_ENDPOINT + '?' + qs;
    }
 
-   function jsonp(url, callbackName) {
-         return new Promise(function (resolve, reject) {
-                 var script = document.createElement('script');
-                 var settled = false;
+   function fetchJson(url) {
+         var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+         var timer = setTimeout(function () {
+                 if (controller) controller.abort();
+         }, REQUEST_TIMEOUT_MS);
 
-                                  var timer = setTimeout(function () {
-                                            if (settled) return;
-                                            settled = true;
-                                            cleanup();
-                                            reject(new Error('rakuten-recommend: request timed out'));
-                                  }, REQUEST_TIMEOUT_MS);
-
-                                  function cleanup() {
-                                            clearTimeout(timer);
-                                            try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
-                                            if (script.parentNode) script.parentNode.removeChild(script);
-                                  }
-
-                                  window[callbackName] = function (data) {
-                                            if (settled) return;
-                                            settled = true;
-                                            cleanup();
-                                            resolve(data);
-                                  };
-
-                                  script.async = true;
-                 script.onerror = function () {
-                           if (settled) return;
-                           settled = true;
-                           cleanup();
-                           reject(new Error('rakuten-recommend: script load error'));
-                 };
-                 script.src = url;
-                 document.head.appendChild(script);
-         });
+         return fetch(url, { method: 'GET', mode: 'cors', signal: controller ? controller.signal : undefined })
+           .then(function (res) {
+                     if (!res.ok) throw new Error('rakuten-recommend: HTTP ' + res.status);
+                     return res.json();
+           })
+           .then(function (data) {
+                     clearTimeout(timer);
+                     return data;
+           }, function (err) {
+                     clearTimeout(timer);
+                     throw err;
+           });
    }
 
    function escapeHtml(str) {
@@ -171,8 +151,7 @@
                 renderItems(shuffle(allItems));
                 return;
             }
-            var callbackName = '__rakutenRecommendCb' + idx + '_' + Date.now();
-            jsonp(buildUrl(KEYWORDS[idx], callbackName), callbackName)
+            fetchJson(buildUrl(KEYWORDS[idx]))
                 .then(function (res) {
                     allItems = allItems.concat(normalizeItems(res));
                 })
