@@ -208,6 +208,9 @@
   .answers-box .v{ font-weight:600; }
 
   .note{ font-size:12.5px; color:var(--ink-muted); line-height:1.7; margin:0 0 24px; }
+  .related-article{ font-size:13px; color:var(--ink-muted); margin:0 0 24px; padding:14px 16px; border:1px solid var(--line); border-radius:10px; background:var(--accent-soft); }
+  .related-article a{ color:var(--accent); font-weight:700; text-decoration:none; }
+  .related-article a:hover{ text-decoration:underline; }
 
   .actions{ display:flex; flex-direction:column; gap:10px; }
   .btn{
@@ -306,6 +309,7 @@
     <p class="result-blurb" id="result-blurb"></p>
     <ul class="answers-box" id="result-answers"></ul>
     <div class="note" id="result-note"></div>
+    <div class="related-article" id="result-related"></div>
     <div class="actions">
       <button class="btn btn-primary" id="btn-copy">診断結果をコピーする</button>
       <a class="btn btn-ghost" id="btn-share-x" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener">X（旧Twitter）でシェア</a>
@@ -454,6 +458,29 @@
     ]
   };
 
+  const RELATED_ARTICLE = {
+    'M-01':{href:'column-mouse-tsumami.html', title:'つまみ持ちマウスの選び方'},
+    'M-02':{href:'column-mouse-tsumami.html', title:'つまみ持ちマウスの選び方'},
+    'M-08':{href:'column-mouse-tsumami.html', title:'つまみ持ちマウスの選び方'},
+    'M-04':{href:'column-mouse-kabuse.html', title:'かぶせ持ちマウスの選び方'},
+    'M-05':{href:'column-mouse-kabuse.html', title:'かぶせ持ちマウスの選び方'},
+    'M-06':{href:'column-mouse-kabuse.html', title:'かぶせ持ちマウスの選び方'},
+    'M-09':{href:'column-mouse-kabuse.html', title:'かぶせ持ちマウスの選び方'},
+    'M-03':{href:'column-mouse-tsukami.html', title:'つかみ持ちマウスの選び方'},
+    'M-07':{href:'column-mouse-tsukami.html', title:'つかみ持ちマウスの選び方'},
+    'M-10':{href:'column-mouse-tsukami.html', title:'つかみ持ちマウスの選び方'},
+    'K-01':{href:'column-keyboard-jiku.html', title:'メカニカルキーボードの軸の選び方'},
+    'K-02':{href:'column-keyboard-jiku.html', title:'メカニカルキーボードの軸の選び方'},
+    'K-03':{href:'column-keyboard-jiku.html', title:'メカニカルキーボードの軸の選び方'},
+    'K-06':{href:'column-keyboard-jiku.html', title:'メカニカルキーボードの軸の選び方'},
+    'K-07':{href:'column-keyboard-jiku.html', title:'メカニカルキーボードの軸の選び方'},
+    'K-04':{href:'column-keyboard-hotswap.html', title:'ホットスワップ対応キーボードとは？'},
+    'K-08':{href:'column-keyboard-hotswap.html', title:'ホットスワップ対応キーボードとは？'},
+    'K-10':{href:'column-keyboard-hotswap.html', title:'ホットスワップ対応キーボードとは？'},
+    'K-05':{href:'column-office-silent.html', title:'在宅ワーク・オフィス向け静音マウス＆キーボードの選び方'},
+    'K-09':{href:'column-office-silent.html', title:'在宅ワーク・オフィス向け静音マウス＆キーボードの選び方'},
+  };
+
   const WEIGHTS = {
     mouse:    { grip:3, size:2, genre:3, wired:2, budget:1 },
     keyboard: { feel:3, size:2, wired:2, hotswap:2, usage:3 }
@@ -574,6 +601,14 @@
         '</a>';
     } else {
       noteEl.textContent = '具体的な製品名・購入リンクは今後ここに追加予定です（プロトタイプ）。';
+    }
+
+    const relEl = $('result-related');
+    const rel = RELATED_ARTICLE[match.id];
+    if (rel) {
+      relEl.innerHTML = '関連記事：<a href="' + rel.href + '">' + rel.title + ' →</a>';
+    } else {
+      relEl.innerHTML = '';
     }
     
     const shareLabel = device === 'mouse' ? 'マウス診断' : 'キーボード診断';
