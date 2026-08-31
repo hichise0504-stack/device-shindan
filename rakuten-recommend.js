@@ -22,7 +22,7 @@
    // 2026年5月13日で廃止されたため openapi.rakuten.co.jp を使用する。
    // このAPIはリクエストにRefererが必須のため、script src読み込み（＝実際のページ経由）
    // でのみ動作し、アドレスバー直打ちでは403になる。
-   var API_ENDPOINT = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601';
+   var API_ENDPOINT = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701';
     var REQUEST_TIMEOUT_MS = 8000;
 
    function buildUrl(keyword, callbackName) {
