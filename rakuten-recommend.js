@@ -106,8 +106,8 @@
            .filter(Boolean);
    }
 
-   function renderItems(items) {
-         var container = document.getElementById('rakuten-recommend-items');
+   function renderItems(containerId, labelText, items) {
+         var container = document.getElementById(containerId);
          if (!container || !items.length) return;
 
       var cardsHtml = items
@@ -137,37 +137,48 @@
 
       container.innerHTML =
               '<div class="rakuten-recommend">' +
-              '<p class="rakuten-recommend-label">その他のおすすめ商品</p>' +
+              '<p class="rakuten-recommend-label">' + escapeHtml(labelText) + '</p>' +
               '<div class="rakuten-recommend-grid">' + cardsHtml + '</div>' +
               '</div>';
    }
 
-   function init() {
-         var container = document.getElementById('rakuten-recommend-items');
+   // 複数キーワードを順番に検索し（楽天APIのQPS制限を避けるため間隔をあける）、
+   // 集めた結果をシャッフルして containerId の要素に描画する。
+   // 他のスクリプト（診断結果ページのクロスセル表示など）からも呼び出せるよう公開する。
+   function fetchAndRender(containerId, keywords, hitsPerKeyword, labelText) {
+         var container = document.getElementById(containerId);
          if (!container || !APP_ID || APP_ID.indexOf('PASTE_') === 0) return;
 
-              // 楽天APIの予想QPSは1リクエスト/秒のため、キーワードごとに閘をあけて順番にリクエストする
-        var allItems = [];
+         var allItems = [];
+         var savedHits = HITS_PER_KEYWORD;
+         if (hitsPerKeyword) HITS_PER_KEYWORD = hitsPerKeyword;
 
-        function fetchNext(idx) {
-            if (idx >= KEYWORDS.length) {
-                renderItems(shuffle(allItems));
-                return;
-            }
-            fetchJson(buildUrl(KEYWORDS[idx]))
-                .then(function (res) {
-                    allItems = allItems.concat(normalizeItems(res));
-                })
-                .catch(function () {
-                    // 1件失敗しても他のキーワードの結果は使う
-                })
-                .then(function () {
-                    setTimeout(function () { fetchNext(idx + 1); }, 1100);
-                });
-        }
+         function fetchNext(idx) {
+             if (idx >= keywords.length) {
+                 HITS_PER_KEYWORD = savedHits;
+                 renderItems(containerId, labelText, shuffle(allItems));
+                 return;
+             }
+             fetchJson(buildUrl(keywords[idx]))
+                 .then(function (res) {
+                     allItems = allItems.concat(normalizeItems(res));
+                 })
+                 .catch(function () {
+                     // 1件失敗しても他のキーワードの結果は使う
+                 })
+                 .then(function () {
+                     setTimeout(function () { fetchNext(idx + 1); }, 1100);
+                 });
+         }
 
-        fetchNext(0);
+         fetchNext(0);
    }
+
+   function init() {
+         fetchAndRender('rakuten-recommend-items', KEYWORDS, HITS_PER_KEYWORD, 'その他のおすすめ商品');
+   }
+
+   window.RakutenRecommend = { fetchInto: fetchAndRender };
 
    if (document.readyState === 'loading') {
          document.addEventListener('DOMContentLoaded', init);

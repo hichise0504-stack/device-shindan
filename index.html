@@ -63,16 +63,21 @@
     --line-soft:#EFEFF1;
     --accent:#2563EB;
     --accent-soft:#EAF1FE;
+    --accent-2:#7C3AED;
+    --shadow-sm:0 1px 2px rgba(16,24,40,.04);
+    --shadow-md:0 8px 24px rgba(16,24,40,.06);
     --sans: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   *{ box-sizing:border-box; }
   html,body{ margin:0; padding:0; }
   body{
-    background:var(--bg);
+    background:linear-gradient(180deg, #F7F8FA 0%, #F1F2F6 100%);
+    background-attachment:fixed;
     color:var(--ink);
     font-family:var(--sans);
     min-height:100vh;
     -webkit-font-smoothing:antialiased;
+    letter-spacing:0.01em;
   }
   *:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 
@@ -89,7 +94,7 @@
   }
   .header-inner .logo{ text-decoration:none; font-weight:800; font-size:27px; letter-spacing:0.5px; background:linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .header-inner nav{ display:flex; gap:18px; font-size:13px; }
-  .header-inner nav a{ color:var(--ink-muted); text-decoration:none; }
+  .header-inner nav a{ color:var(--ink-muted); text-decoration:none; transition:color .15s ease; }
   .header-inner nav a:hover{ color:var(--accent); }
 
   .tool-main{
@@ -106,8 +111,8 @@
     width:100%; max-width:460px;
     background:var(--card);
     border:1px solid var(--line-soft);
-    border-radius:16px;
-    box-shadow:0 1px 2px rgba(16,24,40,.04), 0 8px 24px rgba(16,24,40,.05);
+    border-radius:18px;
+    box-shadow:var(--shadow-sm), var(--shadow-md);
     padding:36px 28px;
   }
 
@@ -127,18 +132,20 @@
     background:var(--card); border:1px solid var(--line); border-radius:12px;
     padding:18px 18px; text-align:left; cursor:pointer;
     color:var(--ink); font-family:var(--sans); width:100%;
-    transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    transition:border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .15s ease;
   }
   .device-card:hover{
     border-color:var(--accent);
-    box-shadow:0 4px 14px rgba(47,94,224,.10);
+    box-shadow:0 6px 16px rgba(47,94,224,.12);
     background:var(--accent-soft);
+    transform:translateY(-1px);
   }
+  .device-card:active{ transform:translateY(0); }
   .device-card .icon{
-    width:38px; height:38px; flex:none; border-radius:9px;
-    background:var(--accent-soft); color:var(--accent);
+    width:40px; height:40px; flex:none; border-radius:10px;
+    background:linear-gradient(135deg, var(--accent-soft) 0%, #F1E9FE 100%); color:var(--accent);
     display:flex; align-items:center; justify-content:center;
-    font-size:17px;
+    font-size:18px;
   }
   .device-card .text{ flex:1; }
   .device-card .name{ font-size:15.5px; font-weight:700; margin-bottom:2px; }
@@ -147,9 +154,9 @@
 
   /* ---- Progress ---- */
   .progress-row{ display:flex; align-items:center; gap:12px; margin-bottom:28px; }
-  .progress-track{ flex:1; height:6px; border-radius:999px; background:var(--line); position:relative; overflow:hidden; }
-  .progress-fill{ position:absolute; left:0; top:0; height:100%; border-radius:999px; background:var(--accent); transition:width .3s ease; }
-  .progress-label{ font-size:12.5px; color:var(--ink-muted); font-weight:600; white-space:nowrap; }
+  .progress-track{ flex:1; height:8px; border-radius:999px; background:var(--line-soft); position:relative; overflow:hidden; box-shadow:inset 0 1px 2px rgba(16,24,40,.05); }
+  .progress-fill{ position:absolute; left:0; top:0; height:100%; border-radius:999px; background:linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); transition:width .35s ease; }
+  .progress-label{ font-size:12px; color:var(--accent); font-weight:700; white-space:nowrap; background:var(--accent-soft); padding:4px 10px; border-radius:999px; }
 
   /* ---- Quiz ---- */
   #screen-quiz{ display:none; }
@@ -167,14 +174,17 @@
     padding:14px 16px;
     cursor:pointer;
     width:100%;
-    transition:border-color .15s ease, background .15s ease;
+    box-shadow:0 1px 2px rgba(16,24,40,.03);
+    transition:border-color .15s ease, background .15s ease, transform .15s ease, box-shadow .15s ease;
   }
-  .opt-btn:hover{ border-color:var(--accent); background:var(--accent-soft); }
+  .opt-btn:hover{ border-color:var(--accent); background:var(--accent-soft); box-shadow:0 4px 12px rgba(37,99,235,.10); transform:translateY(-1px); }
+  .opt-btn:active{ transform:translateY(0); }
   .opt-btn .letter{
-    width:24px; height:24px; flex:none; border-radius:7px;
+    width:26px; height:26px; flex:none; border-radius:50%;
     background:var(--line-soft); color:var(--ink-muted);
     font-size:12px; font-weight:700;
     display:flex; align-items:center; justify-content:center;
+    transition:background .15s ease, color .15s ease;
   }
   .opt-btn:hover .letter{ background:var(--accent); color:#fff; }
 
@@ -189,8 +199,9 @@
   /* ---- Result ---- */
   #screen-result{ display:none; }
   .result-badge{
-    display:inline-block; font-size:12px; font-weight:700; color:var(--accent);
-    background:var(--accent-soft); padding:5px 10px; border-radius:999px; margin-bottom:14px;
+    display:inline-block; font-size:12px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    padding:5px 12px; border-radius:999px; margin-bottom:14px;
   }
   .result-title{ font-size:23px; font-weight:700; margin:0 0 12px; line-height:1.45; }
   .result-blurb{ color:var(--ink-muted); font-size:14.5px; line-height:1.8; margin:0 0 22px; }
@@ -218,9 +229,10 @@
     font-family:var(--sans); font-size:14.5px; font-weight:700;
     padding:14px 16px; border-radius:10px; cursor:pointer; border:1px solid transparent;
     width:100%;
+    transition:opacity .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
   }
-  .btn-primary{ background:var(--accent); color:#fff; }
-  .btn-primary:hover{ background:#2650C6; }
+  .btn-primary{ background:linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%); color:#fff; box-shadow:0 4px 12px rgba(37,99,235,.18); }
+  .btn-primary:hover{ opacity:.92; transform:translateY(-1px); }
   .btn-ghost{ background:#fff; color:var(--ink-muted); border-color:var(--line); }
   .btn-ghost:hover{ color:var(--ink); border-color:var(--ink-muted); }
   a.btn{ display:block; text-decoration:none; text-align:center; box-sizing:border-box; }
@@ -241,14 +253,29 @@
   .ad-banner-desc{ font-size:12px; color:var(--ink-muted); line-height:1.5; }
   .ad-banner-cta{ font-size:12px; color:var(--accent); font-weight:600; margin-top:2px; }
       .result-product-label{ font-size:12px; color:var(--ink-muted); margin:0 0 10px; letter-spacing:0.5px; }
-    .result-product-card{ display:flex; align-items:center; gap:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; text-decoration:none; color:var(--ink); transition:border-color .15s ease, box-shadow .15s ease; }
-    .result-product-card:hover{ border-color:var(--accent); box-shadow:0 4px 12px rgba(37,99,235,0.12); }
+    .result-product-card{ display:flex; align-items:center; gap:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; text-decoration:none; color:var(--ink); transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+    .result-product-card:hover{ border-color:var(--accent); box-shadow:0 6px 16px rgba(37,99,235,0.14); transform:translateY(-1px); }
     .result-product-thumb{ position:relative; width:76px; height:76px; flex:none; border-radius:8px; overflow:hidden; background:var(--bg); }
     .result-product-thumb img{ display:block; width:100%; height:100%; object-fit:contain; }
     .result-product-pr{ position:absolute; top:4px; left:4px; font-size:9px; color:#fff; background:var(--ink-muted); border-radius:4px; padding:1px 5px; }
     .result-product-body{ flex:1; min-width:0; }
     .result-product-name{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font-size:12.5px; font-weight:600; line-height:1.5; margin:0 0 6px; }
     .result-product-cta{ font-size:12px; color:var(--accent); font-weight:600; }
+
+    /* ---- Result: score meter (このタイプの特徴) ---- */
+    .score-block{ margin:4px 0 24px; }
+    .score-label-title{ font-size:12px; color:var(--ink-muted); margin:0 0 12px; letter-spacing:0.5px; }
+    .score-row{ display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+    .score-row:last-child{ margin-bottom:0; }
+    .score-label{ width:92px; flex:none; font-size:12.5px; color:var(--ink-muted); font-weight:600; }
+    .score-track{ flex:1; height:8px; border-radius:999px; background:var(--accent-soft); overflow:hidden; }
+    .score-fill{ height:100%; border-radius:999px; background:var(--accent); transition:width .5s ease; }
+
+    /* result-crosssell はアプリカード内（幅460px）に表示するため、
+       rakuten-recommend.css のページ全幅前提のmax-width/paddingを打ち消し、
+       グリッドを2列にして狭い幅でも見やすくする */
+    #result-crosssell .rakuten-recommend{ max-width:none; margin:0 0 24px; padding:0; }
+    #result-crosssell .rakuten-recommend-grid{ grid-template-columns:repeat(2, 1fr); }
   </style>
 </head>
 <body>
@@ -327,6 +354,8 @@
     <p class="result-blurb" id="result-blurb"></p>
     <ul class="answers-box" id="result-answers"></ul>
     <div class="note" id="result-note"></div>
+    <div class="score-block" id="result-scores"></div>
+    <div id="result-crosssell"></div>
     <div class="related-article" id="result-related"></div>
     <div class="actions">
       <button class="btn btn-primary" id="btn-copy">診断結果をコピーする</button>
@@ -407,178 +436,178 @@
   const PATTERNS = {
     mouse: [
       {id:'M-01', grip:['つまみ持ち'], size:['小(17cm未満)','中(17〜19cm)'], genre:['FPS'], wired:['無線'], budget:['10,000円〜'],
-        category:'軽量ワイヤレスFPS向け', blurb:'30〜60g台の超軽量、高精度センサー、コードレスで振り回しやすい。',
+        scores:[5,5,2], category:'軽量ワイヤレスFPS向け', blurb:'30〜60g台の超軽量、高精度センサー、コードレスで振り回しやすい。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fg-ppd-004wl-bk%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'Logicool G PRO X SUPERLIGHT 2 ワイヤレス ゲーミングマウス 軽量 60g 8Kポーリングレート LIGHTSPEED LIGHTFORCEハイブリッドスイッチ HERO2センサー POWERPLAY対応 G-PPD-004WL-BK G-PPD-004WL-WH ブラック ホワイト 国内正規品 2年間無償保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/g_mice/g-ppd-004wl-bk/g-ppd-004wl-bk_r1.jpg?_ex=600x600'},
       {id:'M-02', grip:['つまみ持ち'], size:['小(17cm未満)','中(17〜19cm)'], genre:['FPS'], wired:['有線'], budget:['〜3,000円'],
-        category:'軽量エントリーFPS向け', blurb:'低遅延・低価格で軽量、初めての軽量マウスにおすすめ。',
+        scores:[4,3,3], category:'軽量エントリーFPS向け', blurb:'低遅延・低価格で軽量、初めての軽量マウスにおすすめ。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fg203-bk%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'Logicool G ゲーミングマウス 有線 G203 LIGHTSYNC RGB 6個プログラムボタン 85g軽量 G203-BK G203-WH G203-BL G203-LC 国内正規品 2年間無償保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/g_mice/g203-bk/g203-bk_r1.jpg?_ex=600x600'},
       {id:'M-03', grip:['つかみ持ち'], size:['中(17〜19cm)'], genre:['FPS'], wired:['無線'], budget:['〜6,000円'],
-        category:'バランス型ワイヤレスFPS向け', blurb:'重すぎず持ちやすいサイズ感、汎用性の高いFPS入門機。',
+        scores:[3,3,4], category:'バランス型ワイヤレスFPS向け', blurb:'重すぎず持ちやすいサイズ感、汎用性の高いFPS入門機。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fg304%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'Logicool G ゲーミングマウス 無線 G304 HEROセンサー LIGHTSPEED ワイヤレス 99g軽量 G304 G304rWH G304-BL G304-LC G304MN 国内正規品 2年間無償保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/g_mice/g304/g304_01_r_1.jpg'},
       {id:'M-04', grip:['かぶせ持ち'], size:['中(17〜19cm)','大(19cm以上)'], genre:['MOBA・RTS'], wired:['有線'], budget:['〜6,000円'],
-        category:'多ボタン・マルチファンクション型', blurb:'サイドボタンが多く、スキル割り当てやマクロ操作に強い。',
+        scores:[2,3,3], category:'多ボタン・マルチファンクション型', blurb:'サイドボタンが多く、スキル割り当てやマクロ操作に強い。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e4aac0.fd46e738.56e4aac1.391870c0/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyoroyorozuya%2Fhi6lcsb3an4ro432pi5fxvxg7e%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'エレコム ゲーミングマウス 【DUX】 有線 14ボタン M-DUX50BK',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/r-style-ra/cabinet/r_2023070446/20240103144044_67_1.jpg?_ex=600x600'},
       {id:'M-05', grip:['かぶせ持ち'], size:['大(19cm以上)'], genre:['作業用'], wired:['無線'], budget:['〜6,000円'],
-        category:'エルゴノミクス・作業向け', blurb:'手首や指への負担が少ない形状、長時間のPC作業向け。',
+        scores:[2,2,3], category:'エルゴノミクス・作業向け', blurb:'手首や指への負担が少ない形状、長時間のPC作業向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm575spd%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'【SALE】 ロジクール ワイヤレスマウス トラックボール ERGO M575SP 無線 静音 Bluetooth &amp; Logi Bolt トラックボールマウス ワイヤレス マウス windows mac iPad M575SPda 国内正規品 1年間無償保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/mice/m575spd/m575spd_s_r.jpg?_ex=600x600'},
       {id:'M-06', grip:['かぶせ持ち'], size:['大(19cm以上)'], genre:['作業用'], wired:['有線'], budget:['〜3,000円'],
-        category:'コスパ重視エントリーマウス', blurb:'価格重視の初心者・サブ機向け、必要十分な機能。',
+        scores:[3,2,4], category:'コスパ重視エントリーマウス', blurb:'価格重視の初心者・サブ機向け、必要十分な機能。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e4aee1.16eaea24.56e4aee2.d78ec84a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Felecom%2F4549550298995%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'エレコム 有線マウス EX-G 静音 Lサイズ 5ボタン 「AskDoctors評価サービス」認証 抗菌 ブラック M-XGL30UBSKABK',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/elecom/cabinet/s500_26/m-xgl30ubskabk_03r.jpg?_ex=600x600'},
       {id:'M-07', grip:['つかみ持ち'], size:['中(17〜19cm)','大(19cm以上)'], genre:['MOBA・RTS'], wired:['無線'], budget:['10,000円〜'],
-        category:'ハイエンド多機能ワイヤレス', blurb:'高精度センサー＋多ボタンを両立、上級者向け。',
+        scores:[2,5,4], category:'ハイエンド多機能ワイヤレス', blurb:'高精度センサー＋多ボタンを両立、上級者向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fg502xwl-rgbbk%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'Logicool G ゲーミングマウス G502 X PLUS ワイヤレス RGB HERO25Kセンサー LIGHTSPEED 無線 ハイブリッドスイッチ LIGHTFORCE POWERPLAY ワイヤレス充電 G502XWL-RGBBK G502XWL-RGBWH ブラック ホワイト 国内正規品 2年間無償保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/g_mice/g502xwl-rgbbk/g502xwl-rgbbk_r.jpg?_ex=600x600'},
       {id:'M-08', grip:['つまみ持ち'], size:['小(17cm未満)'], genre:['FPS'], wired:['有線'], budget:['10,000円〜'],
-        category:'競技志向・有線軽量FPS向け', blurb:'有線接続にこだわる競技勢向け、遅延を極限まで抑えたい層。',
+        scores:[5,5,1], category:'競技志向・有線軽量FPS向け', blurb:'有線接続にこだわる競技勢向け、遅延を極限まで抑えたい層。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e4b384.0691b60d.56e4b385.34a81753/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpc-good%2F341226%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'BENQ BenQ ZOWIE S2-C Matte/Black [中古] 【当社1週間保証】 【 中古スマホとタブレット販売のイオシス 】',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/doriem/cabinet/sn53/sn53_yb07ylnl5km.jpg?_ex=600x600'},
       {id:'M-09', grip:['かぶせ持ち'], size:['中(17〜19cm)'], genre:['作業用'], wired:['有線','無線'], budget:['〜6,000円'],
-        category:'静音・オフィス向け', blurb:'クリック音が静かで、在宅ワークや共有スペースでの利用に適する。',
+        scores:[3,2,3], category:'静音・オフィス向け', blurb:'クリック音が静かで、在宅ワークや共有スペースでの利用に適する。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm331nbk%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'ロジクール 静音ワイヤレスマウス M331n SILENT PLUS 無線 静音 3ボタン 電池寿命18ヶ月 windows mac chrome M331nBK M331nWH M331nGR M331nGP-SE 国内正規品',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/mice/m331n/m331n_0111.jpg?_ex=600x600'},
       {id:'M-10', grip:['つかみ持ち'], size:['大(19cm以上)'], genre:['作業用'], wired:['無線'], budget:['〜3,000円'],
-        category:'バーティカル・エルゴノミクス型', blurb:'手首を立てて使うタイプ、腱鞘炎対策として需要がある層向け。',
+        scores:[2,2,2], category:'バーティカル・エルゴノミクス型', blurb:'手首を立てて使うタイプ、腱鞘炎対策として需要がある層向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e4b8ca.744d1c3b.56e4b8cb.4dbc8de6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fonedayonestyle%2Fanker24g%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'Anker 2.4G ワイヤレスマウス (縦型 無線マウス) 800 / 1200 / 1600 DPI 5ボタン 光学式 エルゴノミクスデザイン 右手用 Windows / MacOS 対応 (ブラック)',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/onedayonestyle/cabinet/06666376/09283302/20220927121510.jpg?_ex=600x600'},
     ],
     keyboard: [
       {id:'K-01', feel:['静音'], size:['テンキーレス'], wired:['有線'], hotswap:['なくてもよい'], usage:['タイピング・作業重視'],
-        category:'静音赤軸・静音打鍵向け', blurb:'在宅ワークや夜間作業でも周囲を気にせず使える。',
+        scores:[5,2,1], category:'静音赤軸・静音打鍵向け', blurb:'在宅ワークや夜間作業でも周囲を気にせず使える。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570143c5.fb67c575.570143c6.8be3a9c5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbiccamera%2F4549550275804%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'ELECOM｜エレコム キーボード Leggero テンキーレス(静音赤軸) ブラック TK-MC30UKPBK [有線 /日本語配列 /メカニカル]',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/biccamera/cabinet/product/9035/00000012225226_a01.jpg'},
       {id:'K-02', feel:['軽快カチカチ'], size:['60%以下コンパクト'], wired:['無線'], hotswap:['興味あり'], usage:['ゲーム重視'],
-        category:'青軸・クリッキー系コンパクト', blurb:'小気味よい打鍵音とフィードバック、省スペースでマウス操作域も確保。',
+        scores:[1,5,4], category:'青軸・クリッキー系コンパクト', blurb:'小気味よい打鍵音とフィードバック、省スペースでマウス操作域も確保。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570e896f.0410697b.570e8970.4d983ba7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkonanonline%2Fspgm-0gqhb7wv4%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'RK ROYAL KLUDGE RK61 ワイヤレスメカニカルキーボード、60% トリプルモード BT5.0/2.4G/USB-C コンパクトゲーミングキーボード、PBTキーキャップ、プロソフトウェア、ホットスワップ対応カスタムスイッチ、（青軸の感触）',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/konanonline/cabinet/root_sniper_folder/sniper_folder_00074/imgrc0356616851.jpg'},
       {id:'K-03', feel:['重め安定'], size:['フルサイズ'], wired:['有線'], hotswap:['なくてもよい'], usage:['タイピング・作業重視'],
-        category:'重めタクタイル・茶軸系フルサイズ', blurb:'指が沈み込む安定した打鍵感、長文入力向け。',
+        scores:[3,3,1], category:'重めタクタイル・茶軸系フルサイズ', blurb:'指が沈み込む安定した打鍵感、長文入力向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/5700faf5.4edb11cb.5700faf6.5f24805b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpckoubou%2Fm4s1p1202324%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'パソコン工房 メカニカルゲーミングキーボード フルサイズ 日本語 茶軸 ブラック ( LEVEL∞ LEV-KB01FK-JBR-BK ) 有線USB接続',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/pckoubou/cabinet/1202000/m4s1p1202324-1.jpg'},
       {id:'K-04', feel:['軽快カチカチ'], size:['テンキーレス'], wired:['有線'], hotswap:['興味あり'], usage:['両方'],
-        category:'ホットスワップ対応TKL', blurb:'軸を自分で交換して好みに調整できる、ゲームと作業を両立。',
+        scores:[2,4,5], category:'ホットスワップ対応TKL', blurb:'軸を自分で交換して好みに調整できる、ゲームと作業を両立。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e4cb41.eaab3668.56e4cb42.3d3ee601/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkitcut%2F506359%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'【在庫限り】 Keychron Q1 V2 QMK ネイビーブルー 75% Mac英語配列 有線 テンキーレス ホットスワップ Gateron G Pro 青軸 81キー RGBライト カスタムメカニカルキーボード ノブバージョン キークロン US配列',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/kitcut/cabinet/item/148/p-396563.jpg'},
       {id:'K-05', feel:['静音'], size:['フルサイズ'], wired:['無線'], hotswap:['なくてもよい'], usage:['タイピング・作業重視'],
-        category:'静音・ワイヤレスオフィス向け', blurb:'会議中でも使える静かさとケーブルレスの快適さ。',
+        scores:[5,2,1], category:'静音・ワイヤレスオフィス向け', blurb:'会議中でも使える静かさとケーブルレスの快適さ。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx850ft%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'ロジクール MX MECHANICAL ワイヤレス メカニカル キーボード KX850 テンキー 茶軸 タクタイル 赤軸 リニア 青軸 クリッキー Logi Bolt Bluetooth Unifying非対応 無線 国内正規品 2年間無償保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/kb/kx850ft/kx850ft_r.jpg?_ex=600x600'},
       {id:'K-06', feel:['重め安定'], size:['60%以下コンパクト'], wired:['無線'], hotswap:['興味あり'], usage:['ゲーム重視'],
-        category:'競技志向・軽量コンパクト無線', blurb:'省スペース＋低遅延、上級者の競技環境向け。',
+        scores:[2,3,4], category:'競技志向・軽量コンパクト無線', blurb:'省スペース＋低遅延、上級者の競技環境向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570e896f.0410697b.570e8970.4d983ba7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkonanonline%2Fspgm-0gqh2knlb%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'RK ROYAL KLUDGE RK61 ワイヤレスメカニカルキーボード、60% トリプルモード BT5.0/2.4G/USB-C コンパクトゲーミングキーボード、PBTキーキャップ、プロソフトウェア、ホットスワップ対応カスタムスイッチ、（茶軸の感触）',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/konanonline/cabinet/root_sniper_folder/sniper_folder_00010/imgrc0356616804.jpg'},
       {id:'K-07', feel:['軽快カチカチ'], size:['フルサイズ'], wired:['有線'], hotswap:['なくてもよい'], usage:['両方'],
-        category:'コスパ重視エントリー機', blurb:'価格を抑えつつ標準的な打鍵感、初めてのメカニカルに。',
+        scores:[3,4,1], category:'コスパ重視エントリー機', blurb:'価格を抑えつつ標準的な打鍵感、初めてのメカニカルに。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e47ff3.2664bbb8.56e47ff4.2598d7c7/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fg413se%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'Logicool G ゲーミングキーボード G413SE 有線 タクタイル メカニカル 日本語配列 フルサイズ 国内正規品 2年間無償保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/logicool/cabinet/prd/g_kb/g413se/g413se_r_.jpg?_ex=600x600'},
       {id:'K-08', feel:['重め安定'], size:['テンキーレス'], wired:['無線'], hotswap:['興味あり'], usage:['タイピング・作業重視'],
-        category:'高級打鍵感・カスタム志向TKL', blurb:'打鍵音・打鍵感にこだわるタイピングマニア向け。',
+        scores:[2,3,5], category:'高級打鍵感・カスタム志向TKL', blurb:'打鍵音・打鍵感にこだわるタイピングマニア向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e4cb41.eaab3668.56e4cb42.3d3ee601/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkitcut%2F526493%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'Keychron Q3 Max QMK/VIA シェルホワイト 80% Mac日本語配列 有線 / Bluetooth 5.1 ワイヤレス 両対応 テンキーレス ホットスワップ Gateron Jupiter バナナ軸 RGBライト カスタムメカニカルキーボード ノブバージョン キークロン',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/kitcut/cabinet/item/168/p-452193.jpg?_ex=600x600'},
       {id:'K-09', feel:['静音'], size:['60%以下コンパクト'], wired:['有線'], hotswap:['なくてもよい'], usage:['両方'],
-        category:'静音コンパクト・省スペース型', blurb:'デスクを広く使いたい、かつ静かに使いたい層向け。',
+        scores:[5,2,1], category:'静音コンパクト・省スペース型', blurb:'デスクを広く使いたい、かつ静かに使いたい層向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570eb187.44671339.570eb188.3b8fcca9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fspringtech%2Fmb700%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'【月初限定｜3,000円以上で350円OFFクーポン】 HUO JI 60% ゲーミングキーボード 有線 メカニカルキーボード 61キー テンキーレス 静音赤軸／青軸 ホットスワップ対応 RGBバックライト Nキーロールオーバー US配列 Windows/Mac/PS対応 コンパクト設計',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/springtech/cabinet/13422027/imgrc0102866208.jpg'},
       {id:'K-10', feel:['軽快カチカチ'], size:['フルサイズ'], wired:['無線'], hotswap:['興味あり'], usage:['ゲーム重視'],
-        category:'ホットスワップ対応フルサイズ', blurb:'多機能キーを活かしつつ、軸交換で打鍵感も追求できる。',
+        scores:[2,4,5], category:'ホットスワップ対応フルサイズ', blurb:'多機能キーを活かしつつ、軸交換で打鍵感も追求できる。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/56e4cfae.dab69379.56e4cfaf.bb0f83fe/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkeychron%2Fkc-4894979028693-copy%2F&link_type=text&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJ0ZXh0Iiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MCwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9',
         name:'Keychron K10 MAX QMK ワイヤレスカスタム・メカニカルキーボード_マルチペアリング_フルサイズ_オフィス_テレワーク_自作キーボード_QMK_ホットスワップ_macOS_Windows_iOS_Android_Linux_アルミボディ_PBTキーキャップ_人気',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/kitcut/cabinet/item/182/p-476193.jpg?_ex=600x600'},
     ],
     headset: [
       {id:'H-01', usage:['FPS・競技ゲーム'], type:['密閉型（遮音重視）'], wired:['有線'], mic:['こだわらない'], budget:['15,000円〜'],
-        category:'定位重視・有線ハイエンドFPS向け', blurb:'低遅延の有線接続と高精度な音の定位で、足音や銃声の方向を正確に捉えたい競技志向の人におすすめ。',
+        scores:[5,5,2], category:'定位重視・有線ハイエンドFPS向け', blurb:'低遅延の有線接続と高精度な音の定位で、足音や銃声の方向を正確に捉えたい競技志向の人におすすめ。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570885f6.70addaaa.570885f7.f82ef0d9/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fe-earphone%2F4517832166966%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'SteelSeries スティールシリーズ Arctis Nova Pro 【61527J】 ゲーミング ヘッドセット ヘッドホン マイク付き DACアンプ PC Mac PS4 PS5 Switch',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/e-earphone/cabinet/03731975/imgrc0096950475.jpg?_ex=240x240'},
       {id:'H-02', usage:['FPS・競技ゲーム'], type:['密閉型（遮音重視）'], wired:['無線'], mic:['重視する'], budget:['〜10,000円'],
-        category:'マイク内蔵・ワイヤレスFPS向け', blurb:'ケーブルの煩わしさがなく、ボイスチャットも重視するFPS・チーム対戦プレイヤー向け。',
+        scores:[4,4,4], category:'マイク内蔵・ワイヤレスFPS向け', blurb:'ケーブルの煩わしさがなく、ボイスチャットも重視するFPS・チーム対戦プレイヤー向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/5701392d.8d8b484d.5701392e.592eebb6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fasahi-abe%2Fb09fs6rb4h%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'【送料無料】Logicool G(ロジクール G) ゲーミングヘッドセット G435 LIGHTSPEED & Bluetooth ワイヤレス ヘッドセット 軽量 165g 内蔵マイク 18時間連続使用 USB ドングル Dolby Atmos対応 ヘッドホン PC PS4 PS5 スマホ 対応 G435WH 国内正規品',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/asahi-abe/cabinet/rakus342_5058/b09fs6rb4h00.jpg'},
       {id:'H-03', usage:['FPS・競技ゲーム'], type:['密閉型（遮音重視）'], wired:['有線'], mic:['こだわらない'], budget:['〜5,000円'],
-        category:'コスパ重視・エントリーゲーミングヘッドセット', blurb:'価格を抑えつつ最低限の定位性能とマイクを備えた、初めてのゲーミングヘッドセットに。',
+        scores:[3,3,2], category:'コスパ重視・エントリーゲーミングヘッドセット', blurb:'価格を抑えつつ最低限の定位性能とマイクを備えた、初めてのゲーミングヘッドセットに。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/57012c47.db4a0ec4.57012c48.f7aac61b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhyperx%2F683l9aa%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'［メーカー公式店］HyperX Cloud Stinger 2 Core ゲーミングヘッドセット 683L9AA ハイパーエックス ゲーミング ヘッドセット ヘッドホン ゲーミングヘッドホン ゲーミングヘッドフォン スティンガー2コア PC ブラック 有線 3.5mm DTS 2年保証',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/hyperx/cabinet/product/img/683l9aa_g.jpg'},
       {id:'H-04', usage:['音楽・映画鑑賞'], type:['開放型（音抜け・自然な音場）'], wired:['有線'], mic:['こだわらない'], budget:['15,000円〜'],
-        category:'開放型・高音質リスニング向け', blurb:'音の抜けが良く自然な広がりのある音場で、じっくり音楽や映画を楽しみたい人向け。',
+        scores:[3,1,1], category:'開放型・高音質リスニング向け', blurb:'音の抜けが良く自然な広がりのある音場で、じっくり音楽や映画を楽しみたい人向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/5701418c.255d2858.5701418d.24d1b67a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Felimino%2F8i08hnfv61m%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'ゼンハイザー Sennheiser ヘッドホン 有線 HD 560S 開放型 オープン型 本社開発ドライバー ダイナミック 国内正規品',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/elimino/cabinet/rakutentool4pic/systempic039/8i08hnfv61m1.jpg'},
       {id:'H-05', usage:['音楽・映画鑑賞'], type:['密閉型（遮音重視）'], wired:['無線'], mic:['こだわらない'], budget:['〜10,000円'],
-        category:'密閉型・重低音重視サラウンド向け', blurb:'外音を遮断し重低音の効いたサウンドで、映画やアクションゲームの没入感を高めたい人向け。',
+        scores:[3,4,1], category:'密閉型・重低音重視サラウンド向け', blurb:'外音を遮断し重低音の効いたサウンドで、映画やアクションゲームの没入感を高めたい人向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570143c5.fb67c575.570143c6.8be3a9c5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbiccamera%2F4548736142411%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'SONY｜ソニー ブルートゥースヘッドホン ブラック WH-CH720N BC [オーバーヘッド型 /ノイズキャンセリング対応 /Bluetooth対応]',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/biccamera/cabinet/product/7658/00000011026220_a01.jpg'},
       {id:'H-06', usage:['在宅ワーク・Web会議'], type:['密閉型（遮音重視）'], wired:['無線'], mic:['重視する'], budget:['〜10,000円'],
-        category:'テレワーク・Web会議向けヘッドセット', blurb:'クリアなマイク性能とワイヤレスの快適さを両立した、在宅ワークやオンライン会議向け。',
+        scores:[2,3,5], category:'テレワーク・Web会議向けヘッドセット', blurb:'クリアなマイク性能とワイヤレスの快適さを両立した、在宅ワークやオンライン会議向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570145f4.b31d7acd.570145f5.84f1be41/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbacestore%2F5706991034219%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'【国内正規品】Jabra ヘッドセット Evolve2 30 SE UC Stereo USB C/A 両耳ヘッドセット 有線 ヘッドホン マイク付き ステレオ USB-C/USB-A接続 ノイズキャンセリング WEB 会議 携帯ポーチ付 23189-989-779',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/bacestore/cabinet/jabra/13407030/imgrc0117483943.jpg'},
       {id:'H-07', usage:['在宅ワーク・Web会議'], type:['密閉型（遮音重視）'], wired:['有線'], mic:['こだわらない'], budget:['〜5,000円'],
-        category:'コスパ重視・テレワーク向けヘッドセット', blurb:'価格を抑えつつ長時間の会議でも疲れにくい、テレワーク向けのシンプルなヘッドセット。',
+        scores:[2,3,3], category:'コスパ重視・テレワーク向けヘッドセット', blurb:'価格を抑えつつ長時間の会議でも疲れにくい、テレワーク向けのシンプルなヘッドセット。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570ebe29.34c3a4bc.570ebe2a.3678b121/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fauc-ulmax%2F4953103927698%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'エレコム ヘッドセット HS-HP20UBK 両耳オーバーヘッド ブラック USB有線 折りたたみ ELECOM HSHP20UBK マイク付き 通話対応 ZOOM Skype テレワーク 会議用 収納ポーチ付き',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/auc-ulmax/cabinet/zg119/4953103927698l.jpg'},
     ],
     monitor: [
       {id:'MN-01', usage:['FPS・競技ゲーム'], refresh:['最重視（144Hz以上）'], size:['24インチ以下'], resolution:['フルHD'], budget:['〜40,000円'],
-        category:'FPS競技向け高リフレッシュレートモニター（144Hz+）', blurb:'高いリフレッシュレートと応答速度で、動きの速いFPS・競技系タイトルの表示遅延を抑えたい人向け。',
+        scores:[5,2,3], category:'FPS競技向け高リフレッシュレートモニター（144Hz+）', blurb:'高いリフレッシュレートと応答速度で、動きの速いFPS・競技系タイトルの表示遅延を抑えたい人向け。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/57088057.a3d36946.57088058.64ff7918/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpixiogaming%2Fpx259p%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'Pixio ゲーミングモニター 24.5インチ ホワイト 白 280hz フルHD IPS HDR ノングレア スピーカー搭載 壁掛け VESA ゲーム用 モニター pcモニター 液晶ディスプレイ 24インチ 25インチ 144Hz 165Hz対応 ピクシオ 公式【2年保証】 PX259P',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/pixiogaming/cabinet/px259p/px259pw_r.jpg?_ex=240x240'},
       {id:'MN-02', usage:['FPS・競技ゲーム'], refresh:['最重視（144Hz以上）'], size:['24インチ以下'], resolution:['フルHD'], budget:['〜20,000円'],
-        category:'コスパ重視144Hzゲーミングモニター', blurb:'価格を抑えつつ144Hz表示を確保した、はじめてのゲーミングモニターにおすすめ。',
+        scores:[4,2,5], category:'コスパ重視144Hzゲーミングモニター', blurb:'価格を抑えつつ144Hz表示を確保した、はじめてのゲーミングモニターにおすすめ。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/5700e5d7.51f913d2.5700e5d8.6cfc1138/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjapannext%2F4589511173817_rakusale%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'【ECサイト限定】 JAPANNEXT 24.5インチ IPSパネル搭載 200Hz/1ms(MPRT)対応 フルHD(1920x1080)解像度 ゲーミングモニター JN-IPS245G200F HDMI DP sRGB:99% HDR PS5 フルHD:120Hz接続 【2年保証】 PCモニター 液晶モニター パソコンモニター ジャパンネクスト',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/japannext/cabinet/08935491/4589511173817/4589511173817_1.jpg?_ex=240x240'},
       {id:'MN-03', usage:['じっくりゲーム・映像鑑賞'], refresh:['こだわらない（60〜75Hz）'], size:['27インチ前後'], resolution:['WQHD'], budget:['〜40,000円'],
-        category:'高解像度・没入型ゲーミングモニター（WQHD）', blurb:'フルHDより緻密な描写で、じっくり遊ぶRPGやアドベンチャーの映像美を楽しみたい人向け。',
+        scores:[2,4,3], category:'高解像度・没入型ゲーミングモニター（WQHD）', blurb:'フルHDより緻密な描写で、じっくり遊ぶRPGやアドベンチャーの映像美を楽しみたい人向け。',
 href:'https://hb.afl.rakuten.co.jp/ichiba/5700e5d7.51f913d2.5700e5d8.6cfc1138/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjapannext%2F4589511173374%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
 name:'JAPANNEXT 27インチ IPSパネル搭載 WQHD(2560x1440)解像度 液晶モニター JN-IPS27Q3-HSP HDMI DP sRGB:99% 高さ調整 ピボット(縦回転)対応 【2年保証】 デスクワーク液晶モニター PCモニター パソコンモニター ジャパンネクスト',
 image:'https://thumbnail.image.rakuten.co.jp/@0_mall/japannext/cabinet/08935491/4589511173374/4589511173374_1.jpg'},
       {id:'MN-04', usage:['じっくりゲーム・映像鑑賞'], refresh:['こだわらない（60〜75Hz）'], size:['32インチ以上'], resolution:['4K'], budget:['60,000円〜'],
-        category:'4K高画質・映像コンテンツ向け大画面モニター', blurb:'大画面と高解像度で、映画鑑賞やグラフィック重視タイトルの映像美を最大限に楽しみたい人向け。',
+        scores:[1,5,2], category:'4K高画質・映像コンテンツ向け大画面モニター', blurb:'大画面と高解像度で、映画鑑賞やグラフィック重視タイトルの映像美を最大限に楽しみたい人向け。',
 href:'https://hb.afl.rakuten.co.jp/ichiba/5700f441.cef3df55.5700f442.5cd146fd/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Febest%2F4989027028593%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
 name:'【対象ショップ限定 先着フラッシュクーポン】LGエレクトロニクス LG 32UN880K-B LG UltraFine Display Ergo 31.5型 4Kモニター アームスタンドモデル 32UN880K-B',
 image:'https://thumbnail.image.rakuten.co.jp/@0_mall/ebest/cabinet/456/4989027028593.jpg'},
       {id:'MN-05', usage:['作業・在宅ワーク'], refresh:['こだわらない（60〜75Hz）'], size:['27インチ前後'], resolution:['WQHD'], budget:['〜40,000円'],
-        category:'在宅ワーク・作業向け高解像度モニター', blurb:'複数ウィンドウを並べやすい解像度と画面サイズで、在宅ワークや資料作成の効率を上げたい人向け。',
+        scores:[2,4,3], category:'在宅ワーク・作業向け高解像度モニター', blurb:'複数ウィンドウを並べやすい解像度と画面サイズで、在宅ワークや資料作成の効率を上げたい人向け。',
 href:'https://hb.afl.rakuten.co.jp/ichiba/5700faf5.4edb11cb.5700faf6.5f24805b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpckoubou%2Fm4s1p1189957%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
 name:'iiyama ProLite XUB2797QSN-B2 27インチ WQHD(2560×1440) リフレッシュレート100Hz IPS方式パネル USB Type-C映像入力対応 液晶モニター',
 image:'https://thumbnail.image.rakuten.co.jp/@0_mall/pckoubou/cabinet/1189000/m4s1p1189957-1.jpg'},
       {id:'MN-06', usage:['作業・在宅ワーク'], refresh:['こだわらない（60〜75Hz）'], size:['24インチ以下'], resolution:['フルHD'], budget:['〜20,000円'],
-        category:'コスパ重視・省スペース作業向けモニター', blurb:'デスクスペースを取らず価格も抑えた、サブモニターや在宅ワーク入門向け。',
+        scores:[2,2,5], category:'コスパ重視・省スペース作業向けモニター', blurb:'デスクスペースを取らず価格も抑えた、サブモニターや在宅ワーク入門向け。',
 href:'https://hb.afl.rakuten.co.jp/ichiba/5700fdc8.b45b74ed.5700fdc9.6288824b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Feccrew%2F4957180170336%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
 name:'I-O DATA アイ・オー・データ 5年保証 3辺フレームレス&amp;広視野角ADSパネル 23.8型ワイド液晶 ブラック 24インチ相当 PCモニター LCD-A241DB LCDA241DB 【NE直】',
 image:'https://thumbnail.image.rakuten.co.jp/@0_mall/eccrew/cabinet/10214601/imgrc0096361221.jpg'},
       {id:'MN-07', usage:['FPS・競技ゲーム'], refresh:['最重視（144Hz以上）'], size:['27インチ前後'], resolution:['WQHD'], budget:['60,000円〜'],
-        category:'高リフレッシュ×高解像度ハイエンドゲーミングモニター', blurb:'高いリフレッシュレートと解像度を両立した、妥協したくない上級者向けハイエンドモニター。',
+        scores:[5,5,1], category:'高リフレッシュ×高解像度ハイエンドゲーミングモニター', blurb:'高いリフレッシュレートと解像度を両立した、妥協したくない上級者向けハイエンドモニター。',
         href:'https://hb.afl.rakuten.co.jp/ichiba/570143c5.fb67c575.570143c6.8be3a9c5/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbiccamera%2F4711081996620%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjAsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D',
         name:'ASUS｜エイスース ゲーミングモニター ROG Swift OLED PG27AQDM [26.5型 /WQHD(2560×1440） /ワイド /240Hz]',
         image:'https://thumbnail.image.rakuten.co.jp/@0_mall/biccamera/cabinet/product/7883/00000011256683_a01.jpg'},
@@ -630,6 +659,23 @@ keyboard: { feel:3, size:2, wired:2, hotswap:2, usage:3 },
   };
 
   const DEVICE_LABELS = { mouse:'マウス診断', keyboard:'キーボード診断', headset:'ヘッドセット診断', monitor:'モニター診断' };
+
+  // 各タイプの特徴を示すスコア軸（パターンごとの scores 配列の並び順に対応）。
+  // 実測値ではなく、当サイトの分類ロジックに基づく相対的な目安。
+  const SCORE_AXES = {
+    mouse:    ['軽さ', '精度・追従性', '汎用性'],
+    keyboard: ['静音性', '打鍵感の軽快さ', 'カスタム性'],
+    headset:  ['定位性能', '遮音性', 'マイク性能'],
+    monitor:  ['滑らかさ', '画質', 'コスパ']
+  };
+
+  // 結果画面のクロスセル（あわせて使いたいアイテム）を探す際の検索キーワード
+  const CROSSSELL = {
+    mouse:    { keyword: 'マウスパッド', label: 'あわせて使いたいマウスパッド' },
+    keyboard: { keyword: 'キーボード リストレスト', label: 'あわせて使いたいリストレスト' },
+    headset:  { keyword: 'ヘッドホンスタンド', label: 'あわせて使いたいヘッドホンスタンド' },
+    monitor:  { keyword: 'モニターアーム', label: 'あわせて使いたいモニターアーム' }
+  };
 
   const LETTERS = ['A','B','C','D'];
 
@@ -747,6 +793,27 @@ keyboard: { feel:3, size:2, wired:2, hotswap:2, usage:3 },
         '</a>';
     } else {
       noteEl.textContent = '具体的な製品名・購入リンクは今後ここに追加予定です（プロトタイプ）。';
+    }
+
+    const scoresEl = $('result-scores');
+    if (match.scores && SCORE_AXES[device]) {
+      const axes = SCORE_AXES[device];
+      scoresEl.innerHTML =
+        '<p class="score-label-title">このタイプの特徴（目安）</p>' +
+        axes.map((axis, i) => {
+          const v = match.scores[i] || 0;
+          return '<div class="score-row"><span class="score-label">' + axis + '</span>' +
+            '<div class="score-track"><div class="score-fill" style="width:' + (v * 20) + '%"></div></div></div>';
+        }).join('');
+    } else {
+      scoresEl.innerHTML = '';
+    }
+
+    const crosssellEl = $('result-crosssell');
+    crosssellEl.innerHTML = '';
+    const cross = CROSSSELL[device];
+    if (cross && window.RakutenRecommend) {
+      window.RakutenRecommend.fetchInto('result-crosssell', [cross.keyword], 3, cross.label);
     }
 
     const relEl = $('result-related');
