@@ -161,7 +161,12 @@
   /* ---- Quiz ---- */
   #screen-quiz{ display:none; }
   .q-text{ font-size:19px; font-weight:700; line-height:1.6; margin:0 0 8px; }
-  .q-help{ font-size:12.5px; color:var(--ink-muted); line-height:1.6; margin:0 0 20px; }
+  .q-help{ font-size:12.5px; color:var(--ink-muted); line-height:1.6; margin:0 0 8px; }
+  .q-help-links{ display:none; font-size:12.5px; line-height:1.6; margin:0 0 20px; }
+  .q-help-links .q-help-links-label{ color:var(--ink-muted); }
+  .q-help-links a{ color:var(--accent); text-decoration:none; font-weight:600; }
+  .q-help-links a:hover{ text-decoration:underline; }
+  .q-help-links .sep{ color:var(--line); margin:0 6px; }
   .options{ display:flex; flex-direction:column; gap:10px; }
   .opt-btn{
     display:flex; align-items:center; gap:12px;
@@ -343,6 +348,7 @@
     </div>
     <p class="q-text" id="q-text"></p>
     <p class="q-help" id="q-help"></p>
+    <div class="q-help-links" id="q-help-links"></div>
     <div class="options" id="q-options"></div>
     <button class="back-link" id="btn-back">← 前の質問へ</button>
   </section>
@@ -404,31 +410,51 @@
 
   const QUESTIONS = {
     mouse: [
-      { key:'grip',   text:'持ち方は？', options:['かぶせ持ち','つかみ持ち','つまみ持ち'], help:'かぶせ持ち＝手のひら全体で覆う／つかみ持ち＝その中間／つまみ持ち＝指先だけで支える持ち方です。' },
+      { key:'grip',   text:'持ち方は？', options:['かぶせ持ち','つかみ持ち','つまみ持ち'], help:'かぶせ持ち＝手のひら全体で覆う／つかみ持ち＝その中間／つまみ持ち＝指先だけで支える持ち方です。',
+        helpLinksLabel:'持ち方の違いを詳しく', helpLinks:[
+          {label:'かぶせ持ち', href:'column-mouse-kabuse.html'},
+          {label:'つかみ持ち', href:'column-mouse-tsukami.html'},
+          {label:'つまみ持ち', href:'column-mouse-tsumami.html'},
+        ] },
       { key:'size',   text:'手のひらのサイズは？', options:['小(17cm未満)','中(17〜19cm)','大(19cm以上)'] },
       { key:'wired',  text:'有線・無線どちらが良い？', options:['有線','無線'] },
       { key:'genre',  text:'主なプレイジャンルは？', options:['FPS','MOBA・RTS','作業用'] },
       { key:'budget', text:'予算感は？', options:['〜3,000円','〜6,000円','10,000円〜'] },
     ],
     keyboard: [
-      { key:'feel',    text:'求める打鍵感は？', options:['静音','軽快カチカチ','重め安定'] },
+      { key:'feel',    text:'求める打鍵感は？', options:['静音','軽快カチカチ','重め安定'],
+        helpLinks:[{label:'→ キーの軸(打鍵感)の違いを詳しく', href:'column-keyboard-jiku.html'}] },
       { key:'size',    text:'サイズは？', options:['フルサイズ','テンキーレス','60%以下コンパクト'] },
       { key:'wired',   text:'有線・無線どちらが良い？', options:['有線','無線'] },
-      { key:'hotswap', text:'ホットスワップ（軸交換）に興味は？', options:['興味あり','なくてもよい'], help:'はんだ付けなしでキースイッチ（軸）を交換できる機能です。打鍵感を後から自分好みに変えられます。' },
+      { key:'hotswap', text:'ホットスワップ（軸交換）に興味は？', options:['興味あり','なくてもよい'], help:'はんだ付けなしでキースイッチ（軸）を交換できる機能です。打鍵感を後から自分好みに変えられます。',
+        helpLinks:[{label:'→ ホットスワップについて詳しく', href:'column-keyboard-hotswap.html'}] },
       { key:'usage',   text:'主な用途は？', options:['ゲーム重視','タイピング・作業重視','両方'] },
     ],
     headset: [
-      { key:'usage',   text:'主な用途は？', options:['FPS・競技ゲーム','音楽・映画鑑賞','在宅ワーク・Web会議'] },
-      { key:'type',    text:'装着タイプは？', options:['密閉型（遮音重視）','開放型（音抜け・自然な音場）'], help:'密閉型＝音が漏れにくく没入感重視、開放型＝圧迫感が少なく自然な音場が特徴です。' },
+      { key:'usage',   text:'主な用途は？', options:['FPS・競技ゲーム','音楽・映画鑑賞','在宅ワーク・Web会議'],
+        helpLinksLabel:'用途別の選び方を詳しく', helpLinks:[
+          {label:'FPS・競技ゲーム', href:'column-headset-fps.html'},
+          {label:'音楽・映画鑑賞', href:'column-headset-listening.html'},
+          {label:'在宅ワーク・Web会議', href:'column-headset-telework.html'},
+        ] },
+      { key:'type',    text:'装着タイプは？', options:['密閉型（遮音重視）','開放型（音抜け・自然な音場）'], help:'密閉型＝音が漏れにくく没入感重視、開放型＝圧迫感が少なく自然な音場が特徴です。',
+        helpLinks:[{label:'→ 密閉型・開放型の違いを詳しく', href:'column-headset-listening.html'}] },
       { key:'wired',   text:'有線・無線どちらが良い？', options:['有線','無線'] },
       { key:'mic',     text:'マイク性能は重視する？', options:['重視する','こだわらない'] },
       { key:'budget',  text:'予算感は？', options:['〜5,000円','〜10,000円','15,000円〜'] },
     ],
     monitor: [
-      { key:'usage',      text:'主な用途は？', options:['FPS・競技ゲーム','じっくりゲーム・映像鑑賞','作業・在宅ワーク'] },
-      { key:'refresh',    text:'リフレッシュレートは重視する？', options:['最重視（144Hz以上）','こだわらない（60〜75Hz）'], help:'1秒間に画面が切り替わる回数です。数値が高いほど動きが滑らかに見えます。' },
+      { key:'usage',      text:'主な用途は？', options:['FPS・競技ゲーム','じっくりゲーム・映像鑑賞','作業・在宅ワーク'],
+        helpLinksLabel:'用途別の選び方を詳しく', helpLinks:[
+          {label:'FPS・競技ゲーム', href:'column-monitor-fps.html'},
+          {label:'じっくりゲーム・映像鑑賞', href:'column-monitor-cinema.html'},
+          {label:'作業・在宅ワーク', href:'column-monitor-work.html'},
+        ] },
+      { key:'refresh',    text:'リフレッシュレートは重視する？', options:['最重視（144Hz以上）','こだわらない（60〜75Hz）'], help:'1秒間に画面が切り替わる回数です。数値が高いほど動きが滑らかに見えます。',
+        helpLinks:[{label:'→ リフレッシュレートについて詳しく', href:'column-monitor-fps.html'}] },
       { key:'size',       text:'画面サイズは？', options:['24インチ以下','27インチ前後','32インチ以上'] },
-      { key:'resolution', text:'解像度は？', options:['フルHD','WQHD','4K'], help:'フルHD＜WQHD＜4Kの順で画質が精細になり、必要なPC性能も上がります。' },
+      { key:'resolution', text:'解像度は？', options:['フルHD','WQHD','4K'], help:'フルHD＜WQHD＜4Kの順で画質が精細になり、必要なPC性能も上がります。',
+        helpLinks:[{label:'→ 解像度(WQHD・4K)について詳しく', href:'column-monitor-cinema.html'}] },
       { key:'budget',     text:'予算感は？', options:['〜20,000円','〜40,000円','60,000円〜'] },
     ]
   };
@@ -708,6 +734,21 @@ keyboard: { feel:3, size:2, wired:2, hotswap:2, usage:3 },
     const q = qs[stepIndex];
     $('q-text').textContent = q.text;
     $('q-help').textContent = q.help || '';
+
+    const helpLinksEl = $('q-help-links');
+    if (q.helpLinks && q.helpLinks.length){
+      const linksHtml = q.helpLinks.map(l =>
+        '<a href="' + l.href + '" target="_blank" rel="noopener">' + l.label + '</a>'
+      ).join('<span class="sep">/</span>');
+      helpLinksEl.innerHTML = (q.helpLinks.length > 1 && q.helpLinksLabel)
+        ? '<span class="q-help-links-label">' + q.helpLinksLabel + '：</span>' + linksHtml
+        : linksHtml;
+      helpLinksEl.style.display = 'block';
+    } else {
+      helpLinksEl.innerHTML = '';
+      helpLinksEl.style.display = 'none';
+    }
+
     $('progress-label').textContent = (stepIndex+1) + ' / ' + qs.length;
     $('progress-fill').style.width = (100 * stepIndex / qs.length) + '%';
 
